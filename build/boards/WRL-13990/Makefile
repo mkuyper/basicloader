@@ -1,0 +1,7 @@
+FLAVOR	:= nrf5
+MCU	:= NRF52832_XXAA
+
+include ../main.mk
+
+#CDEFS	+= BOOT_LED_GPIO="GPIO('A',5,0)"
+#CDEFS	+= UPDATE_LED_GPIO="GPIO('A',5,0)"
