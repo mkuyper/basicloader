@@ -1,5 +1,6 @@
 _estack = ORIGIN(RAM) + LENGTH(RAM);
 _ebl = ORIGIN(BLFLASH) + LENGTH(BLFLASH);
+_efw = ORIGIN(FWFLASH) + LENGTH(FWFLASH);
 
 SECTIONS {
     .mbrcfg : {

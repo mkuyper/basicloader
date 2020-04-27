@@ -34,6 +34,8 @@ FLAGS		+= -I$(SRCDIR)/common
 CFLAGS		+= -Wall
 CFLAGS		+= -Os
 CFLAGS		+= -I$(SRCDIR)/arm/nrf5/mdk
+CFLAGS		+= -I$(SRCDIR)/arm/nrf5/softdevice/mbr/headers
+CFLAGS		+= -I$(SRCDIR)/arm/nrf5/softdevice/$(SOFTDEVICE)/headers
 
 LDFLAGS		+= -mcpu=$(MCPU)
 LDFLAGS		+= -T$(SRCDIR)/arm/nrf5/ld/nrf52832_xxaa.ld

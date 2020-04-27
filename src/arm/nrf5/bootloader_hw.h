@@ -7,6 +7,8 @@
 #define _bootloader_hw_h_
 
 #include "nrf.h"
+#include "nrf_mbr.h"
+#include "nrf_sdm.h"
 
 
 // ------------------------------------------------

@@ -103,7 +103,6 @@ void boot_panic (uint32_t type, uint32_t reason, uint32_t addr) {
     // disable all interrupts
     __disable_irq();
 
-    // TODO - blink LED
 #if defined(BOOT_LED_GPIO)
     blink_panic(type, reason, addr);
 #endif
@@ -123,7 +122,33 @@ static void fw_panic (uint32_t reason, uint32_t addr) {
 // Bootloader main entry point
 
 void* bootloader (void) {
-    boot_panic(BOOT_PANIC_TYPE_BOOTLOADER, BOOT_PANIC_REASON_CRC, 0); // XXX
+    boot_fwhdr* fwh = (boot_fwhdr*) BOOT_FW_START;
+
+    // TODO: check presence and integrity of firmware update
+
+    // verify integrity of current firmware
+    if( fwh->size < sizeof(boot_fwhdr)
+	    || fwh->size > (BOOT_FW_END - BOOT_FW_START)
+	    || boot_crc32(((unsigned char*) fwh) + 8, (fwh->size - 8) >> 2) != fwh->crc ) {
+	boot_panic(BOOT_PANIC_TYPE_BOOTLOADER, BOOT_PANIC_REASON_CRC, 0);
+    }
+
+    // TODO: clear any pending firmware update
+
+    // On nRF5 (with MBR and SoftDevice), the entrypoint in the firmware header
+    // points to the firmware's interrupt vector, the address of the entrypoint
+    // should be in the slot for the reset handler.
+
+    // Start forwarding interrupts to SoftDevice
+    sd_mbr_command_t cmd = { .command = SD_MBR_COMMAND_INIT_SD };
+    sd_mbr_command(&cmd);
+    // Ensure SoftDevice is disabled
+    sd_softdevice_disable();
+    // Set application interrupt vector address
+    sd_softdevice_vector_table_base_set(fwh->entrypoint);
+
+    // return entry point
+    return (void*) ((uint32_t*) fwh->entrypoint)[1];
 }
 
 
