@@ -8,4 +8,15 @@
 
 #include "nrf.h"
 
+
+// ------------------------------------------------
+// GPIO definition
+#define GPIO(n,flags)   ((n) | (flags))
+
+#define GPIO_F_ACTLOW   (1 << 16)
+
+#define PORTN(gpio)     ((gpio) >> 8 & 0xff)
+#define PORT(gpio)      NRF_P0
+#define PIN(gpio)       ((gpio) & 0xff)
+
 #endif

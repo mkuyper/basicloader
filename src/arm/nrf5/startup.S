@@ -12,6 +12,15 @@
 
 
     // --------------------------------------------
+    // MBR configuration words
+    .section .mbr.mbrcfg,"a",%progbits
+    .type  mbrcfg, %object
+mbrcfg:
+    .word isr_vector            // start of bootloader
+    .word 0xffffffff            // MBR param flash page
+
+
+    // --------------------------------------------
     // Max. number of IRQn
 #if defined(NRF52832_XXAA) || defined(NRF52832_XXAB)
 #define MAX_IRQn		39	/* 0-38, nRF52832 PS, pg. 24-25 */

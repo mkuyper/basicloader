@@ -2,10 +2,9 @@ include $(MKDIR)/arm.mk
 
 VPATH		+= $(SRCDIR)/arm/nrf5
 VPATH		+= $(SRCDIR)/common
-VPATH		+= $(SRCDIR)/common/micro-ecc
 
 SRCS		+= bootloader.c
-#SRCS		+= util.S
+SRCS		+= util.S
 SRCS		+= startup.S
 
 #SRCS		+= update.c
@@ -17,6 +16,12 @@ ifneq (,$(findstring NRF52,$(MCU)))
 else
     $(error Unsupported MCU: $(MCU))
 endif
+
+ifneq (,$(findstring NRF52832,$(MCU)))
+    SOFTDEVICE	:= s132
+endif
+
+SOFTDEVICE_HEX	:= $(SRCDIR)/arm/nrf5/softdevice/$(SOFTDEVICE)/hex/softdevice.hex
 
 DEFS		+= $(MCU)
 
@@ -38,14 +43,17 @@ OBJS		= $(addsuffix .o,$(basename $(SRCS)))
 
 bootloader: $(OBJS)
 
-bootloader.hex: bootloader
+bootloader0.hex: bootloader
 	$(HEX) $< $@
+
+bootloader.hex: bootloader0.hex $(SOFTDEVICE_HEX)
+	srec_cat $(foreach x,$^,$(x) -Intel) -Output $@ -Intel
 
 default: bootloader.hex
 
 
 clean:
-	rm -f *.o *.d *.map bootloader bootloader.hex bootloader.bin
+	rm -f *.o *.d *.map bootloader bootloader*.hex
 
 .PHONY: clean default
 
