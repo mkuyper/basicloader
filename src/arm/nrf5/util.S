@@ -16,7 +16,7 @@
     .section .boot.delay,"ax",%progbits
     .thumb_func
 delay:
-	lsls r0, r0, #21
+	lsls r0, r0, #19
      1: subs r0, #1
 	bne 1b
 	bx lr
