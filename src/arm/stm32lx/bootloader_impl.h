@@ -1,3 +1,4 @@
+// Copyright (C) 2020-2020 Michael Kuyper. All rights reserved.
 // Copyright (C) 2016-2019 Semtech (International) AG. All rights reserved.
 //
 // This file is subject to the terms and conditions defined in file 'LICENSE',
@@ -12,7 +13,7 @@
 // Convert pointer to Thumb function (set least-significant bit)
 #define THUMB_FUNC(p)	((void*) (((intptr_t) (p)) | 1))
 
-extern uint32_t _ebl;
+extern uint32_t _ebl[];
 #define BOOT_FW_BASE	((uint32_t) (&_ebl))
 
 #define BOOT_CONFIG_BASE	DATA_EEPROM_BASE	// XXX
