@@ -1,3 +1,4 @@
+// Copyright (C) 2020-2020 Michael Kuyper. All rights reserved.
 // Copyright (C) 2016-2019 Semtech (International) AG. All rights reserved.
 //
 // This file is subject to the terms and conditions defined in file 'LICENSE',
@@ -13,8 +14,8 @@
 // ------------------------------------------------
 // Memory
 
-extern uint32_t _estack;
-extern uint32_t _ebl;
+extern uint32_t _estack[];
+extern uint32_t _ebl[];
 
 #define RAM_BASE        0x10000000
 #define RAM_SIZE        (16 * 1024)

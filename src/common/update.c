@@ -1,3 +1,4 @@
+// Copyright (C) 2020-2020 Michael Kuyper. All rights reserved.
 // Copyright (C) 2016-2019 Semtech (International) AG. All rights reserved.
 //
 // This file is subject to the terms and conditions defined in file 'LICENSE',
@@ -33,6 +34,10 @@ static void flashcopy (void* ctx, uint32_t* dst, const uint32_t* src, uint32_t n
 	up_flash_wr_page(ctx, dst, buf);
 	dst += PB_WORDS;
     }
+}
+
+static inline uint32_t* _aligned (void* p) {
+    return p;
 }
 
 static uint32_t update_plain (void* ctx, boot_uphdr* fwup, bool install) {
@@ -116,16 +121,16 @@ static uint32_t update_lz4delta (void* ctx, boot_uphdr* fwup, bool install) {
 	uint32_t bsz = (fwup->fwsize - boff < blksize) ? fwup->fwsize - boff : blksize; // current block size (last block might be shorter)
 	if (install) {
 	    // verify target block
-	    if (!checkhash(baddr, bsz, b->hash)) {
+	    if (!checkhash(baddr, bsz, _aligned(b->hash))) {
 		up_flash_unlock(ctx);
 		// verify temp block
-		if (!checkhash(tmp, bsz, b->hash)) {
+		if (!checkhash(tmp, bsz, _aligned(b->hash))) {
 		    // uncompress delta to temp block
 		    if (lz4_decompress(ctx, b->lz4data, b->lz4len, tmp, (uint8_t*) fwhdr + doff, b->dictlen) != bsz) {
 			return BOOT_E_GENERAL; // unrecoverable error - should not happen!
 		    }
 		    // verify temp block
-		    if (!checkhash(tmp, bsz, b->hash)) {
+		    if (!checkhash(tmp, bsz, _aligned(b->hash))) {
 			return BOOT_E_GENERAL; // unrecoverable error - should not happen!
 		    }
 		}
