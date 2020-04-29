@@ -46,6 +46,7 @@ isr_vector:
     .endr
 
     .size  isr_vector, .-isr_vector
+    .global isr_vector
 
 
     // --------------------------------------------

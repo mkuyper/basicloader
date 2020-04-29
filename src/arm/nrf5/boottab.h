@@ -13,6 +13,8 @@
 typedef struct {
     uint32_t version;                                   // version of boot loader (values below 256 are reserved for legacy bootloaders)
 
+    uint32_t* vector;                                   // address of the bootloader IRQ vector
+
     __attribute__((noreturn))
         void (*panic) (uint32_t reason, uint32_t addr); // bootloader panic function
 

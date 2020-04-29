@@ -128,27 +128,21 @@ void* bootloader (void) {
 
     // verify integrity of current firmware
     if( fwh->size < sizeof(boot_fwhdr)
-	    || fwh->size > (BOOT_FW_END - BOOT_FW_START)
-	    || boot_crc32(((unsigned char*) fwh) + 8, (fwh->size - 8) >> 2) != fwh->crc ) {
-	boot_panic(BOOT_PANIC_TYPE_BOOTLOADER, BOOT_PANIC_REASON_CRC, 0);
+            || fwh->size > (BOOT_FW_END - BOOT_FW_START)
+            || boot_crc32(((unsigned char*) fwh) + 8, (fwh->size - 8) >> 2) != fwh->crc ) {
+        boot_panic(BOOT_PANIC_TYPE_BOOTLOADER, BOOT_PANIC_REASON_CRC, 0);
     }
 
     // TODO: clear any pending firmware update
-
-    // On nRF5 (with MBR and SoftDevice), the entrypoint in the firmware header
-    // points to the firmware's interrupt vector, the address of the entrypoint
-    // should be in the slot for the reset handler.
 
     // Start forwarding interrupts to SoftDevice
     sd_mbr_command_t cmd = { .command = SD_MBR_COMMAND_INIT_SD };
     sd_mbr_command(&cmd);
     // Ensure SoftDevice is disabled
     sd_softdevice_disable();
-    // Set application interrupt vector address
-    sd_softdevice_vector_table_base_set(fwh->entrypoint);
 
     // return entry point
-    return (void*) ((uint32_t*) fwh->entrypoint)[1];
+    return (void*) fwh->entrypoint;
 }
 
 
@@ -159,8 +153,11 @@ void* bootloader (void) {
 //
 //   0x100 - initial version
 
+extern uint32_t isr_vector[];
+
 const boot_boottab boottab = {
     .version    = 0x100,
+    .vector     = isr_vector,
     .update     = NULL, // XXX
     .panic      = fw_panic,
     .crc32      = boot_crc32,
