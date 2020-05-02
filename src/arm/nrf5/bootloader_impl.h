@@ -9,9 +9,9 @@
 #include "bootloader.h"
 #include "boottab.h"
 
-extern uint32_t _ebl[];
+extern uint32_t _bfw[];
 extern uint32_t _efw[];
-#define BOOT_FW_START   ((uint32_t) (&_ebl))
+#define BOOT_FW_START   ((uint32_t) (&_bfw))
 #define BOOT_FW_END     ((uint32_t) (&_efw))
 
 #endif
