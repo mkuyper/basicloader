@@ -65,13 +65,13 @@ static void svc (uint32_t id, uint32_t p1, uint32_t p2, uint32_t p3); // fwd dec
 
 __attribute__((noreturn, naked, noinline))
 static void fw_panic (uint32_t reason, uint32_t addr) {
-    svc(BOOT_SVC_PANIC, BOOT_PANIC_TYPE_FIRMWARE, reason, addr);
+    svc(SVC_PANIC, BOOT_PANIC_TYPE_FIRMWARE, reason, addr);
     __builtin_unreachable();
 }
 
 __attribute__((noreturn, naked, noinline))
 static void boot_panic (uint32_t reason) {
-    svc(BOOT_SVC_PANIC, BOOT_PANIC_TYPE_BOOTLOADER, reason, 0);
+    svc(SVC_PANIC, BOOT_PANIC_TYPE_BOOTLOADER, reason, 0);
     __builtin_unreachable();
 }
 

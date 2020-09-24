@@ -1,0 +1,4 @@
+click
+lz4
+intelhex
+pycryptodome
